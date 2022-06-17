@@ -27,7 +27,7 @@ After adapting the code for ranking your traffic data, package your maven projec
 ```
 mvn clean package -Dmaven.test.skip=true
 ```
-Upload the package (e.g., toplist.jar) to your Spark client machine, and run `submit.sh` to submit the Spark application to YARN clusters. Remember to modify configuration parmeters in `submit.sh` (You can also follow the instructions in the [official documentation](https://spark.apache.org/docs/latest/submitting-applications.html)).
+<p>Upload the package (e.g., toplist.jar) to your Spark client machine, and run `submit.sh` to submit the Spark application to YARN clusters. Remember to modify configuration parmeters in `submit.sh` (You can also follow the instructions in the [official documentation](https://spark.apache.org/docs/latest/submitting-applications.html)).</p>
   
   - Modify the path in the first line to your path that installs the spark-submit script;
   - `--master`: The master URL for the cluster (e.g. yarn or spark://23.195.26.187:7077);
