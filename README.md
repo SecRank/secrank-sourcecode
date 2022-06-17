@@ -16,24 +16,24 @@ This repository contains the source code for our ranking implementation (a Scala
   
 ## Usage Instructions
   
-For users are using Apache Hadoop, use IntelliJ IDEA (or other Java IDE with Maven integration) to create a Maven project and replace the default `pom.xml` file by the `pom.xml` file in this repo, which contains all dependency configurations and package requirements. Please make sure you have installed Java, Scala, Apache Spark and Hadoop on your machine (this implement uses Java 1.8, Scala 2.11.8, Apache Spark 2.4.5 and Hadoop 2.7.2).
+For users who are using Apache Hadoop, use IntelliJ IDEA (or other Java IDE with Maven integration) to create a Maven project. Replace the default `pom.xml` file with the `pom.xml` file in this repo, which contains all dependency configurations and package requirements. Please ensure you have installed Java, Scala, Apache Spark, and Hadoop on your machine (this implementation uses Java 1.8, Scala 2.11.8, Apache Spark 2.4.5 and Hadoop 2.7.2).
 
   
 Next, put `TopFQDNDailyRelease.scala` in the path `$YOUR_PROJECT_PATH$/src/main/java/com/secrank/examples/`. Please modify `trends_path` and `access_path` in `TopFQDNDailyRelease.scala` to your own input traffic data paths on HDFS, and also accordingly modify the output paths.
   
-After adapting the code for ranking your traffic data, package your maven project to .jar file (you can also package the project directly using IntelliJ):
+After adapting the code for ranking your traffic data, package your maven project to a .jar file (you can also package the project directly using IntelliJ):
 ```
 mvn clean package -Dmaven.test.skip=true
 ```
 <p>Upload the package (e.g., toplist.jar) to your Spark client machine, and run `submit.sh` to submit the Spark application to YARN clusters. Remember to modify configuration parmeters in `submit.sh` (You can also follow the instructions in the [official documentation](https://spark.apache.org/docs/latest/submitting-applications.html)).</p>
   
-  - Modify the path in the first line to your path that installs the spark-submit script;
+  - Modify the path in the first line to the path that installs the spark-submit script on your machine;
   - `--master`: The master URL for the cluster (e.g. yarn or spark://23.195.26.187:7077);
   - `--deploy-mode`: Whether to deploy your driver on the worker nodes (cluster) or locally as an external client (client) (default: client);
   - `--class`: The entry point for your application (e.g. com.secrank.examples.TopFQDNDailyRelease).
   - `--queue`: Set up queue name if you are using YARN.
 
-According to your data amount, modify `--driver-cores`, `--driver-memory`, `--num-executors`, `--executor-cores` and `--executor-memory` to your custom resource allocation to execute the job. We use 300 executors each configured with 2 cores and 4 GB of memory.
+According to your data amount, modify `--driver-cores`, `--driver-memory`, `--num-executors`, `--executor-cores` and `--executor-memory` to your custom resource allocation to execute the job. For example, we use 300 executors each configured with 2 cores and 4 GB of memory for our daily top 1M list computing (check the details in our paper).
 
 ```
 sh submit.sh
@@ -41,7 +41,7 @@ sh submit.sh
 Make sure your Spark application is submitted successfully and running correctly, then you are all set to wait for your ranking results!
  
  
-For users who have a relatively small traffic dataset to rank domains (and do not familiar with Apache Hadoop and Scala), it's easy to modify our code to other programming languages (e.g., Python).
+For users who have a relatively small traffic dataset to rank domains (and do not familiar with Apache Hadoop and Scala), it's easy to modify our code to other programming languages (e.g., use the pandas library in Python to replace table operations in our implementation).
 
 ## Citation
 
