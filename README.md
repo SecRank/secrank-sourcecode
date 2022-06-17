@@ -1,6 +1,6 @@
 # SecRank
 
-## 1. Introduction
+## Introduction
 
 Existing top lists (e.g., Alexa and Cisco Umbrella) exhibit numerous issues, including a lack of transparency into the list data sources and construction methods, high volatility, and easy ranking manipulation. Despite these flaws, these top lists remain widely used today due to a lack of suitable alternatives.
 
@@ -16,7 +16,7 @@ This repository contains the source code for our ranking implementation (a Scala
   
 ## Usage Instructions
   
-For uses are using Apache Hadoop, use IntelliJ IDEA (or other Java IDE with Maven integration) to create a Maven project and replace the default `pom.xml` file by the `pom.xml` file in this repo, which contains all dependency configurations and package requirements. Please make sure you have installed Java, Scala, Apache Spark and Hadoop on your machine (this implement uses Java 1.8, Scala 2.11.8, Apache Spark 2.4.5 and Hadoop 2.7.2).
+For users are using Apache Hadoop, use IntelliJ IDEA (or other Java IDE with Maven integration) to create a Maven project and replace the default `pom.xml` file by the `pom.xml` file in this repo, which contains all dependency configurations and package requirements. Please make sure you have installed Java, Scala, Apache Spark and Hadoop on your machine (this implement uses Java 1.8, Scala 2.11.8, Apache Spark 2.4.5 and Hadoop 2.7.2).
 
   
 Next, put `TopFQDNDailyRelease.scala` in the path `$YOUR_PROJECT_PATH$/src/main/java/com/secrank/examples/`. Please modify `trends_path` and `access_path` in `TopFQDNDailyRelease.scala` to your own input traffic data paths on HDFS, and also accordingly modify the output paths.
@@ -39,7 +39,10 @@ According to your data amount, modify `--driver-cores`, `--driver-memory`, `--nu
 sh submit.sh
 ```
 Make sure your Spark application is submitted successfully and running correctly, then you are all set to wait for your ranking results!
-  
+ 
+ 
+For users who have a relatively small traffic dataset to rank domains (and do not familiar with Apache Hadoop and Scala), it's easy to modify our code to other programming languages (e.g., Python).
+
 ## Citation
 
 If you use our ranking method or the constructed top list (SecRank) in your research, please consider citing our work using this Bibtex entry:
