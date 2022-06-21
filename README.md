@@ -11,9 +11,9 @@ Using an extensive passive DNS dataset, we investigate different top list design
 This repository contains the source code for our ranking implementation (a Scala implementation named `TopFQDNDailyRelease.scala`), described in our paper. The original code is executed in a distributed fashion using Apache Spark on Yarn. 
 
 <p align="right">
-<img title="" src="image/paper.png" align="right" width="200"/><a href="https://www.usenix.org/system/files/sec22fall_xie.pdf"/>
+<img title="" src="image/paper.png" align="right" width="200"/><a href="https://www.usenix.org/system/files/sec22fall_xie.pdf">
  </p>
- <p></p><p></p>
+ </a>
 
 ## Usage Instructions
 
