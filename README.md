@@ -4,7 +4,7 @@
 
 Existing top lists (e.g., Alexa and Cisco Umbrella) exhibit numerous issues, including a lack of transparency into the list data sources and construction methods, high volatility, and easy ranking manipulation. Despite these flaws, these top lists remain widely used today due to a lack of suitable alternatives.
 
-Using an extensive passive DNS dataset, we investigate different top list design considerations. Our list is based on continuous large-scale PDNS data from public DNS,resolvers in China. On average, the PDNS dataset consists of ∼500B unique DNS requests from over 10M clients per day, for ∼550M FQDNs.These FQDNs are distributed across an average of 13M SLDs a day, and cover 99.9% of IANA TLDs. We produce a voting-based domain ranking method where we quantify the domain preferences of individual IP addresses, and then determine a global ranking across addresses through a voting mechanism. We empirically evaluate our top list design, demonstrating that it achieves better stability and manipulation resistance than existing top lists (Alexa/Cisco Umbrella/Tranco), while serving as an open and transparent ranking method that other researchers can use or adapt for similar ranking scenarios. Further details can be found in our paper ["Building an Open, Robust,and Stable Voting-Based Internet Domain Top List"](https://www.usenix.org/conference/usenixsecurity22/presentation/xie) (Usenix Security 2022). We provide access to the daily updated top 1M domain list on [https://secrank.cn/topdomain](https://secrank.cn/topdomain). 
+Using an extensive passive DNS dataset, we investigate different top list design considerations. Our list is based on continuous large-scale PDNS data from public DNS resolvers in China. On average, the PDNS dataset consists of ∼500B unique DNS requests from over 70M clients per day, for ∼550M FQDNs. These FQDNs are distributed across an average of 13M SLDs a day, and cover 99.9% of IANA TLDs. We produce a voting-based domain ranking method where we quantify the domain preferences of individual IP addresses, and then determine a global ranking across addresses through a voting mechanism. We empirically evaluate our top list design, demonstrating that it achieves better stability and manipulation resistance than existing top lists (Alexa/Cisco Umbrella/Tranco), while serving as an open and transparent ranking method that other researchers can use or adapt for similar ranking scenarios. Further details can be found in our paper ["Building an Open, Robust,and Stable Voting-Based Internet Domain Top List"](https://www.usenix.org/conference/usenixsecurity22/presentation/xie) (Usenix Security 2022). We provide access to the daily updated top 1M domain list on [https://secrank.cn/topdomain](https://secrank.cn/topdomain). 
 
   
 This repository contains the source code for our ranking implementation (a Scala implementation named `TopFQDNDailyRelease.scala`), described in our paper. The original code is executed in a distributed fashion using Apache Spark on Yarn. 
@@ -35,17 +35,10 @@ mvn clean package -Dmaven.test.skip=true
 
 According to your data amount, modify `--driver-cores`, `--driver-memory`, `--num-executors`, `--executor-cores` and `--executor-memory` to your custom resource allocation to execute the job. For example, we use 300 executors each configured with 2 cores and 4 GB of memory for our daily top 1M list computing (check the details in our paper).
 
-```
-sh submit.sh
-```
-Make sure your Spark application is submitted successfully and running correctly, then you are all set to wait for your ranking results!
- 
- 
-For users who have a relatively small traffic dataset to rank domains (and do not familiar with Apache Hadoop and Scala), it's easy to modify our code to other programming languages (e.g., use the pandas library in Python to replace table operations in our implementation).
 
 ## Citation
 
-If you use our ranking method or the constructed top list (SecRank) in your research, please consider citing our work using this Bibtex entry:
+If you use our ranking method or the constructed top list (SecRank) in your research, please cite our work using this Bibtex entry:
 ```
 @inproceedings{xietoplist_usenix22,
   title = {Building an Open, Robust, and Stable {Voting-Based} Domain Top List},
