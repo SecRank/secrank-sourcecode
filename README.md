@@ -16,7 +16,7 @@ This repository contains the source code for our ranking implementation (a Scala
   
 ## Usage Instructions
   
-For users who are using Apache Hadoop, use IntelliJ IDEA (or other Java IDE with Maven integration) to create a Apache Maven project. Replace the default `pom.xml` file with the `pom.xml` file in this repo, which contains all dependency configurations and package requirements. Please ensure you have installed Java, Scala, Maven, Apache Spark, and Hadoop on your machine (this implementation uses Java 1.8, Maven JDK 1.8, Scala 2.11.8, Apache Spark 2.4.5 and Hadoop 2.7.2).
+For users who are using Apache Hadoop, use IntelliJ IDEA (or other Java IDE with Maven integration) to create a Apache Maven project. Replace the default `pom.xml` file with the `pom.xml` file in this repo, which contains all dependency configurations and package requirements. Please ensure you have installed Java, Scala, Maven, Apache Spark, and Hadoop on your machine. This implementation uses Java 1.8, Maven JDK 1.8, Scala 2.11.8, Apache Spark 2.4.5 and Hadoop 2.7.2 (you can also find the configurations in the `pom.xml` file).
 
   
 Next, put `TopFQDNDailyRelease.scala` in the path `$YOUR_PROJECT_PATH$/src/main/java/com/secrank/examples/`. Please modify `trends_path` and `access_path` in `TopFQDNDailyRelease.scala` to your own input traffic data paths on HDFS, and also accordingly modify the output paths.
