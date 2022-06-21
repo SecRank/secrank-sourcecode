@@ -33,7 +33,7 @@ mvn clean package -Dmaven.test.skip=true
   - `--class`: The entry point for your application (e.g. com.secrank.examples.TopFQDNDailyRelease).
   - `--queue`: Set up queue name if you are using YARN.
 
-According to your data amount, modify `--driver-cores`, `--driver-memory`, `--num-executors`, `--executor-cores` and `--executor-memory` to your custom resource allocation to execute the job. For example, we use 300 executors each configured with 2 cores and 4 GB of memory for our daily top 1M list computing (check the details in our paper).
+According to your data amount, modify `--driver-cores`, `--driver-memory`, `--num-executors`, `--executor-cores` and `--executor-memory` to your custom resource allocation to execute the job. For example, we use 300 executors each configured with 2 cores and 4 GB of memory for our daily top 1M list computation (check the details in our paper).
 
 
 ## Citation
