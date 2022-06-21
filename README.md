@@ -22,11 +22,11 @@ For users who are using Apache Hadoop, use IntelliJ IDEA (or other Java IDE with
   
 Next, put `TopFQDNDailyRelease.scala` in the path `$YOUR_PROJECT_PATH$/src/main/java/com/secrank/examples/`. Please modify `trends_path` and `access_path` in `TopFQDNDailyRelease.scala` to your own input traffic data paths on HDFS, and also accordingly modify the output paths.
   
-After adapting the code for ranking your own network traffic data, package your maven project to a .JAR file using the following command (you can also package the project directly using IntelliJ):
+<p>After adapting the code for ranking your own network traffic data, package your maven project to a .JAR file using the following command (you can also package the project directly using IntelliJ):</p>
 ```
 mvn clean package -Dmaven.test.skip=true
 ```
-<p>Upload the package (e.g., toplist.jar) to your Spark client machine,</p> and run `submit.sh` in this repo to submit the Spark application to YARN clusters. Remember to modify configuration parmeters in `submit.sh` (You can also follow the instructions in the [official documentation](https://spark.apache.org/docs/latest/submitting-applications.html)).
+Upload the package (e.g., toplist.jar) to your Spark client machine, and run `submit.sh` in this repo to submit the Spark application to YARN clusters. Remember to modify configuration parmeters in `submit.sh` (You can also follow the instructions in the [official documentation](https://spark.apache.org/docs/latest/submitting-applications.html)).
   
   - Modify the path in the first line to the path that installs the spark-submit script on your machine;
   - `--master`: The master URL for the cluster (e.g. yarn or spark://23.195.26.187:7077);
