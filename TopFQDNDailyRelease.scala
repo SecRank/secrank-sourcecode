@@ -54,11 +54,11 @@ object TopFQDNDailyRelease {
 
 
 
-    /* ========== Step 1. IP-Specific Domain Preferences Computing (Please refer to Sec 5.1 in our paper) ========== */
+    /* ========== Step 1. IP-Specific Domain Preferences Computation (Please refer to Sec 5.1 in our paper) ========== */
 
     // Input the rdd we just computed in Step 0 that has filtered out domains with #IPs < 15 and #Reqs < 15.
     val selected_domain = sc.textFile("/fqdn/filter/%s/".format(gDate)).map(_.split("\t"))
-      .map(x => x(0)).toDF("selected_domain") // Rename for later table jointing.
+      .map(x => x(0)).toDF("selected_domain") // Rename for later table join operation.
 
     /* Input the access data that stores the daily access traffic table.
     *  Each row in the table represents a record that an IP address (client_ip) requested an FQDN (fqdn) in a day, and there are at least the following fields in the data frame:
@@ -73,7 +73,7 @@ object TopFQDNDailyRelease {
     // Select those domains with #IPs >= 15 and #Reqs >= 15 in the access data table.
     val access_filter_df = access_df_pref.join(selected_domain, selected_domain("selected_domain") === access_df_pref("domain"))
 
-    // Compute the maximum value of Request Volume $\gamma$ for normalization.
+    // Compute the maximum value of Request Volume $\gamma$ for normalization (Please refer to Request Volume $\gamma$ in Sec 5.1 in our paper).
     val max_cnt_df = access_filter_df.agg(max("req").alias("max_cnt"))
     max_cnt_df.write.parquet("/ip_pre/max_record/%s".format(gDate)) // Save intermediate results for data analysis.
     val max_cnt_df_read = spark.read.parquet("/ip_pre/max_record/%s".format(gDate))
@@ -107,7 +107,7 @@ object TopFQDNDailyRelease {
     *  and save the data frame to the path /ip_pre/mean_value/. */
     preference_df.withColumn("nor_ad", $"ad"/144.0)        // Normalize Active Duration $\alpha$.
       .withColumn("nor_cnt", log($"req" * 1.0 + 1.0) / max_cnt) // Normalize Request Volume $\gamma$.
-      .withColumn("mean", sqrt($"nor_ad" * $"nor_cnt"))         // Compute the Geometric Mean (Please refer to Combination in Sec 5.1).
+      .withColumn("mean", sqrt($"nor_ad" * $"nor_cnt"))         // Compute the Geometric Mean (Please refer to Combination in Sec 5.1 in our paper).
       .select("domain", "ip", "req", "nor_ad", "nor_cnt", "mean")
       .write.parquet("/ip_pre/mean_value/%s/".format(gDate))
 
@@ -116,9 +116,9 @@ object TopFQDNDailyRelease {
 
 
 
-    /* ========== Step 2. IP Address Weighting Computing (Please refer to Sec 5.2 in our paper) ========== */
+    /* ========== Step 2. IP Address Weighting Computation (Please refer to Sec 5.2 in our paper) ========== */
 
-    /* ========== Step 2.1 FQDN-related Statistics Computing (Please refer to IP Address Total Request Volume $\mu$ in Sec 5.2 in our paper ) ========== */
+    /* ========== Step 2.1 FQDN-related Statistics Computation (Please refer to IP Address Total Request Volume $\mu$ in Sec 5.2 in our paper ) ========== */
     /* The access_path stores daily access traffic data table.
     *  Each row in the table represents a record that an IP address (client_ip) requested an FQDN (fqdn) in a day, and there are at least the following fields in the data frame:
     *  "fqdn": the domain name;
@@ -137,8 +137,8 @@ object TopFQDNDailyRelease {
 
     /* For each IP address, we compute three statistics, and save the data frame to the path /ip_weight/fqdn_stat/ for the next step:
     *   1) the maximum number of requests the IP address requests for a specific FQDN (named as max_cnt);
-    *   2) the number of requests to each FQDN the IP address makes (named as fqdn_cnt);
-    *   3) the total number of requests (among all FQDNs) the IP makes (named as sum_cnt). */
+    *   2) the number of distinct FQDNs requested by the IP address (named as fqdn_cnt);
+    *   3) the total number of requests (among all distinct FQDNs) the IP makes (named as sum_cnt). */
     fqdn_filter_df.groupBy("ip")
       .agg(max("req").alias("max_cnt"), count("domain").alias("fqdn_cnt"), sum("req").alias("sum_cnt"))
       .write.parquet("/ip_weight/fqdn_stat/%s".format(gDate))
@@ -146,7 +146,7 @@ object TopFQDNDailyRelease {
     /* ============================== End Step 2.1 ============================== */
 
 
-    /* ========== Step 2.2 SLD-related Statistics Computing (Please refer to Domain Diversity $\delta$ in Sec 5.2 in our paper) ========== */
+    /* ========== Step 2.2 SLD-related Statistics Computation (Please refer to Domain Diversity $\delta$ in Sec 5.2 in our paper) ========== */
 
     // Again, we input the access data and select necessary field (i.e., sld and client_ip) for computing SLD-related statistics.
     val access_df_sld = spark.read.parquet(access_path)
@@ -157,7 +157,7 @@ object TopFQDNDailyRelease {
     val sld_filter_df = access_df_sld.filter(!$"sld".contains(".arpa"))
 
     /* For each IP address, we compute one statistic, and save the data frame to the path /ip_weight/sld_stat/ for the next step:
-    *   1) the number of requests to each SLD the IP address makes (named as sld_cnt). */
+    *   1) the number of distinct SLDs requested by the IP address (named as sld_cnt). */
     sld_filter_df.distinct() // Please remember to remove duplicate records as the original access data frame is based on FQDN.
       .groupBy("ip")
       .agg(count("sld").alias("sld_cnt"))
@@ -175,7 +175,7 @@ object TopFQDNDailyRelease {
     // Input the statistics of each SLD we just computed in Step 2.2.
     val sld_stat_path = "/ip_weight/sld_stat/%s".format(gDate)
     val sld_df = spark.read.parquet(sld_stat_path)
-      .withColumn("sld_ip", $"ip") // Rename for later table jointing.
+      .withColumn("sld_ip", $"ip") // Rename for later table join operation.
       .select("sld_ip", "sld_cnt")
 
     // Normalize IP Address Total Request Volume $\mu$.
@@ -188,9 +188,10 @@ object TopFQDNDailyRelease {
     sld_max = math.log(sld_max * 1.0 + 1.0) // Use log1p function for data smoothing.
     val nor_sld_df = sld_df.withColumn("nor_sld", log($"sld_cnt" * 1.0 + 1) / sld_max)    // Normalization.
 
-    // Compute the weight value of each IP address, and save the data frame to path /ip_weight/weight/
+    /* Compute the weight value of each IP address, and save the data frame to path /ip_weight/weight/.
+    *  The weight value is the Geometric Mean of Domain Diversity $\delta$ and IP Address Total Request Volume $\mu$ */
     val joint_df = nor_sld_df.join(nor_fqdn_df, nor_fqdn_df("ip") === nor_sld_df("sld_ip"), "inner")
-    joint_df.withColumn("weight", sqrt($"nor_sld" * $"nor_sum"))
+    joint_df.withColumn("weight", sqrt($"nor_sld" * $"nor_sum")) // Compute the Geometric Mean (Please refer to Combination in Sec 5.2 in our paper).
       .select("ip", "sld_cnt", "nor_sld", "sum_cnt", "nor_sum", "weight")
       .write.parquet("/ip_weight/weight/%s".format(gDate))
 
@@ -213,12 +214,12 @@ object TopFQDNDailyRelease {
 
     // Input the IP weights we computed in Step 2.
     val weight_df = spark.read.parquet("/ip_weight/weight/%s".format(gDate))
-      .withColumn("ip_w", $"ip").select("ip_w", "weight") // Rename for later table jointing.
+      .withColumn("ip_w", $"ip").select("ip_w", "weight") // Rename for later table join operation.
 
-    // Joint the two data frame to combine IP preferences and weights
-    val join_df = pre_df.join(weight_df, weight_df("ip_w") === pre_df("ip"), "inner")
+    // Join the two data frame to combine IP preferences and weights
+    val joint_weight_df = pre_df.join(weight_df, weight_df("ip_w") === pre_df("ip"), "inner")
       .select("domain", "ip", "mean", "index", "weight")
-    join_df.write.parquet("/joint_weight/%s".format(gDate))  // Save intermediate results for data analysis.
+    joint_weight_df.write.parquet("/joint_weight/%s".format(gDate))  // Save intermediate results for data analysis.
 
     // Input the joint data frame we just computed.
     val rank_df = spark.read.parquet("/joint_weight/%s/".format(gDate))
