@@ -1,9 +1,9 @@
 # SecRank
-
-## Introduction
 <p align="right">
 <a href="https://www.usenix.org/system/files/sec22fall_xie.pdf"/>
 <img title="" src="image/paper.png" align="right" width="250"/> </p> <p></p>
+## Introduction
+
 
 <p>Existing top lists (e.g., Alexa and Cisco Umbrella) exhibit numerous issues, including a lack of transparency into the list data sources and construction methods, high volatility, and easy ranking manipulation. Despite these flaws, these top lists remain widely used today due to a lack of suitable alternatives.</p>
 
