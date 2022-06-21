@@ -13,7 +13,6 @@ This repository contains the source code for our ranking implementation (a Scala
 <a href="https://www.usenix.org/system/files/sec22fall_xie.pdf">
 <img title="" src="image/paper.png" align="right" width="250">
 </p>
- <p></p>
   
 ## Usage Instructions
 
