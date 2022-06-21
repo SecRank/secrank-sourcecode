@@ -9,10 +9,6 @@ Using an extensive passive DNS dataset, we investigate different top list design
   
 This repository contains the source code for our ranking implementation (a Scala implementation named `TopFQDNDailyRelease.scala`), described in our paper. The original code is executed in a distributed fashion using Apache Spark on Yarn. 
 
-<p align="right">
-<a href="https://www.usenix.org/system/files/sec22fall_xie.pdf">
-<img title="" src="image/paper.png" align="right" width="250">
-</p>
   
 ## Usage Instructions
 
@@ -21,7 +17,7 @@ For users who are using Apache Hadoop, use IntelliJ IDEA (or other Java IDE with
   
 Next, put `TopFQDNDailyRelease.scala` in the path `$YOUR_PROJECT_PATH$/src/main/java/com/secrank/examples/`. Please modify `trends_path` and `access_path` in `TopFQDNDailyRelease.scala` to your own input traffic data paths on HDFS, and also accordingly modify the output paths.
   
-<p>After adapting the code for ranking your own network traffic data, package your maven project </p>to a .JAR file using the following command (you can also package the project directly using IntelliJ):
+After adapting the code for ranking your own network traffic data, package your maven project to a .JAR file using the following command (you can also package the project directly using IntelliJ):
 ```
 mvn clean package -Dmaven.test.skip=true
 ```
