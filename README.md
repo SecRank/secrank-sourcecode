@@ -21,7 +21,7 @@ For users who are using Apache Hadoop, use IntelliJ IDEA (or other Java IDE with
   
 Next, put `TopFQDNDailyRelease.scala` in the path `$YOUR_PROJECT_PATH$/src/main/java/com/secrank/examples/`. Please modify `trends_path` and `access_path` in `TopFQDNDailyRelease.scala` to your own input traffic data paths on HDFS, and also accordingly modify the output paths.
   
-After adapting the code for ranking your own network traffic data, package your maven project to a .jar file (you can also package the project directly using IntelliJ):
+After adapting the code for ranking your own network traffic data, package your maven project to a .JAR file use the following command (you can also package the project directly using IntelliJ):
 ```
 mvn clean package -Dmaven.test.skip=true
 ```
